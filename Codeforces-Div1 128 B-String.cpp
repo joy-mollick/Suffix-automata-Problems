@@ -1,3 +1,6 @@
+
+/// Time-0.372 s
+
 #include<bits/stdc++.h>
 
 using namespace std;
@@ -83,7 +86,8 @@ void sa_extend(int c) {
 void calcul(int v) {
     if (dp[v])
         return;
-    dp[v] = cnt[v];
+    dp[v] = cnt[v]; /// we previously on finding kth unique one , initialize with it one assuming that state occurs one time 
+    /// But here we have to take the occurrence of state should be taken into account 
     for (map<int, int>::iterator it = st[v].next.begin(); it != st[v].next.end(); it++)
     {
         calcul(it->second);
@@ -110,14 +114,10 @@ void find_kth_lexicographical(int k)
                 if (st[p].next[a]) k-=dp[st[p].next[a]];
                  a++;/// it is increased till there is edge from p i.e. st[p].next[a] is not empty
             }
-        /// it has been checked that st[p].next[a] is not empty i.e.
-        /// if it is empty so dp[0] (=0) is less than k :) ,so automatically increased by while loop
-        /// so , we can take this path into account because we are finding kth path
-        /// The one which path count of dp[i] is greater than k , subtract those paths from k ,new k will be found
             res+=('a'+a);
             p=st[p].next[a];
-            if(k>=cnt[p]) {k=k-cnt[p];}
-            else {break;}
+            if(k>=cnt[p]) {k=k-cnt[p];}///when we find kth unique lexicographically string , then we subtract one from k assuming this string occurs one time 
+            else {break;}              /// But here , we have to care about duplicate strings ,so subtract occurrence of that string should be subtracted 
             ///cout<<"k out"<<k<<endl;
         }
     }
